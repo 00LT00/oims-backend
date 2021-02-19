@@ -60,9 +60,9 @@ func getJpeg(c *gin.Context) interface{} {
 
 func getXml(c *gin.Context) interface{} {
 	timeStamp := c.Query("id")
-	resultPath := "./result/" + timeStamp
+	resultPath := "./results/" + timeStamp + ".xml"
 	f, err := os.Open(resultPath)
-	if os.IsExist(err) {
+	if os.IsNotExist(err) {
 		panic(error.NewHttpError(404, "40401", resultPath+" is not exist"))
 	}
 	data, err := ioutil.ReadFile(f.Name())
