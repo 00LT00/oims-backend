@@ -4,8 +4,8 @@ Pass = "root"
 Addr = "localhost:3306"
 DBName = "oims"
 [DB]
-User = "root"
-Pass = "123456"
+User = "oims"
+Pass = "root"
 Addr = "localhost:3306"
 DBName = "oims"
 [Server]
