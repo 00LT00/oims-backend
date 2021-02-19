@@ -1,0 +1,13 @@
+[DBDev]
+User = "root"
+Pass = "root"
+Addr = "localhost:3306"
+DBName = "oims"
+[DB]
+User = "root"
+Pass = "123456"
+Addr = "localhost:3306"
+DBName = "oims"
+[Server]
+Port = ":12308"
+Sign = "spppk"
