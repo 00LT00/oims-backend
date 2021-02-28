@@ -24,17 +24,23 @@ func getJpeg(c *gin.Context) interface{} {
 		panic(error.NewHttpError(403, "40301", err.Error()))
 	}
 	TimeStamp := time.Now().Unix()
-	basePath := "../historys/" + strconv.FormatInt(TimeStamp, 10)
+	basePath := "../historys/"
 	_, err = os.Stat(basePath)
 	if err != nil {
 		panic(error.NewHttpError(500, "50001", err.Error()))
 	}
+	filePath := basePath + strconv.FormatInt(TimeStamp, 10)
+	err = os.Mkdir(filePath, os.ModePerm)
+	if err != nil {
+		panic(error.NewHttpError(500, "50002", err.Error()))
+	}
+
 	if len(*images) == 0 {
 		panic(error.NewHttpError(403, "40301", "no images"))
 	}
 
 	for _, file := range *images {
-		filename := basePath + "/" + file.Name
+		filename := filePath + "/" + file.Name
 		f, err := os.Create(filename)
 		if err != nil {
 			panic(err)
