@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"oims/app/docker"
 	"oims/error"
 	"os"
 	"strconv"
@@ -23,7 +24,8 @@ func getJpeg(c *gin.Context) interface{} {
 		panic(error.NewHttpError(403, "40301", err.Error()))
 	}
 	TimeStamp := time.Now().Unix()
-	err = os.MkdirAll("./historys/"+strconv.FormatInt(TimeStamp, 10), os.ModePerm)
+	basePath := "./historys/" + strconv.FormatInt(TimeStamp, 10)
+	_, err = os.Stat(basePath)
 	if err != nil {
 		panic(error.NewHttpError(500, "50001", err.Error()))
 	}
@@ -32,7 +34,7 @@ func getJpeg(c *gin.Context) interface{} {
 	}
 
 	for _, file := range *images {
-		filename := "./historys/" + strconv.FormatInt(TimeStamp, 10) + "/" + file.Name
+		filename := basePath + "/" + file.Name
 		f, err := os.Create(filename)
 		if err != nil {
 			panic(err)
@@ -54,6 +56,9 @@ func getJpeg(c *gin.Context) interface{} {
 			panic(errors.New(file.Name + "write null"))
 		}
 	}
+
+	// docker 处理图片
+	docker.Run()
 
 	return TimeStamp
 }
