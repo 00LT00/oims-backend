@@ -24,7 +24,7 @@ func getJpeg(c *gin.Context) interface{} {
 		panic(error.NewHttpError(403, "40301", err.Error()))
 	}
 	TimeStamp := time.Now().Unix()
-	basePath := "./historys/" + strconv.FormatInt(TimeStamp, 10)
+	basePath := "../historys/" + strconv.FormatInt(TimeStamp, 10)
 	_, err = os.Stat(basePath)
 	if err != nil {
 		panic(error.NewHttpError(500, "50001", err.Error()))
@@ -65,7 +65,7 @@ func getJpeg(c *gin.Context) interface{} {
 
 func getXml(c *gin.Context) interface{} {
 	timeStamp := c.Query("id")
-	resultPath := "./results/" + timeStamp + ".xml"
+	resultPath := "../results/" + timeStamp + ".xml"
 	f, err := os.Open(resultPath)
 	if os.IsNotExist(err) {
 		panic(error.NewHttpError(404, "40401", resultPath+" is not exist"))
