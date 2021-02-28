@@ -64,7 +64,7 @@ func getJpeg(c *gin.Context) interface{} {
 	}
 
 	// docker 处理图片
-	docker.Run()
+	docker.Run(strconv.FormatInt(TimeStamp, 10))
 
 	return TimeStamp
 }
