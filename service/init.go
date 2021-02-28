@@ -19,11 +19,11 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	db, err := initDB(Conf)
-	if err != nil {
-		panic(err)
-	}
-	Service.DB = db
+	//db, err := initDB(Conf)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//Service.DB = db
 	r := initGin()
 	Service.Engine = r
 	err = os.MkdirAll("./historys", os.ModePerm)
