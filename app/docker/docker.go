@@ -10,7 +10,7 @@ import (
 	"github.com/docker/docker/client"
 )
 
-func Run() {
+func Run(timestamp string) {
 	ctx := context.Background()
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
@@ -29,7 +29,7 @@ func Run() {
 
 	resp, err := cli.ContainerExecCreate(ctx, ContainerID, types.ExecConfig{
 		WorkingDir:   "/oims/Efficientdet",
-		Cmd:          strings.Split("python model_inspect.py --output_image_dir results/ --input_image historys/123/*.jpg", " "),
+		Cmd:          strings.Split("python model_inspect.py --output_image_dir results/ --input_image historys/"+timestamp+"/*.jpg", " "),
 		Tty:          true,
 		AttachStdin:  true,
 		AttachStdout: true,
