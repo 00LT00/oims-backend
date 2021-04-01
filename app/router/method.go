@@ -83,3 +83,7 @@ func getXml(c *gin.Context) interface{} {
 	result := base64.StdEncoding.EncodeToString(data)
 	return result
 }
+
+func ping(_ *gin.Context) interface{} {
+	return "success"
+}

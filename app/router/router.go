@@ -10,6 +10,7 @@ var s = service.Service
 
 func InitRouter() {
 	r := s.Engine
+	r.GET("/ping", f(ping))
 	r.Use(check, recovery)
 	r.POST("/image", f(getJpeg))
 
