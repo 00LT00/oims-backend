@@ -64,7 +64,7 @@ func getJpeg(c *gin.Context) interface{} {
 	}
 
 	// docker 处理图片
-	docker.Run(strconv.FormatInt(TimeStamp, 10))
+	go docker.Run(strconv.FormatInt(TimeStamp, 10))
 
 	return TimeStamp
 }
@@ -82,6 +82,12 @@ func getXml(c *gin.Context) interface{} {
 	}
 	result := base64.StdEncoding.EncodeToString(data)
 	return result
+}
+
+func restart(c *gin.Context) interface{} {
+	id := c.Query("id")
+	docker.Run(id)
+	return "End of run"
 }
 
 func ping(_ *gin.Context) interface{} {

@@ -16,6 +16,8 @@ func InitRouter() {
 
 	r.GET("/xml", f(getXml))
 
+	r.PATCH("/restart", f(restart))
+
 	_ = r.Run(conf.Server.Port)
 }
 
