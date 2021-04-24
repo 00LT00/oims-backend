@@ -11,3 +11,6 @@ DBName = "oims"
 [Server]
 Port = ":12308"
 Sign = "spppk"
+[Path]
+Result = "/result"
+History = "/history"

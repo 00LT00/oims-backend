@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	_ "oims/service/gpu"
 	"os"
 )
 
@@ -24,12 +25,12 @@ func init() {
 	//	panic(err)
 	//}
 	//Service.DB = db
+	Conf.Path.Result = dir+ Conf.Path.Result
+	Conf.Path.History = dir+ Conf.Path.History
+	initPath()
 	r := initGin()
 	Service.Engine = r
-	err = os.MkdirAll("./historys", os.ModePerm)
-	if err != nil {
-		panic(err)
-	}
+
 }
 
 func initDB(conf *conf) (*gorm.DB, error) {
@@ -45,4 +46,16 @@ func initDB(conf *conf) (*gorm.DB, error) {
 
 func initGin() *gin.Engine {
 	return gin.Default()
+}
+
+func initPath(){
+	err := os.MkdirAll(Conf.Path.History, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+	//os.Chmod(Conf.Path.History, os.ModePerm)
+	err = os.MkdirAll(Conf.Path.Result, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
 }

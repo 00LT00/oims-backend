@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
-	"oims/app/docker"
+	"oims/app/oims"
 	"oims/error"
 	"os"
 	"strconv"
@@ -24,12 +24,13 @@ func getJpeg(c *gin.Context) interface{} {
 		panic(error.NewHttpError(403, "40301", err.Error()))
 	}
 	TimeStamp := time.Now().Unix()
-	basePath := "../historys/"
+	ID := strconv.FormatInt(TimeStamp, 10)
+	basePath := conf.Path.History
 	_, err = os.Stat(basePath)
 	if err != nil {
 		panic(error.NewHttpError(500, "50001", err.Error()))
 	}
-	filePath := basePath + strconv.FormatInt(TimeStamp, 10)
+	filePath := basePath + ID
 	err = os.Mkdir(filePath, os.ModePerm)
 	if err != nil {
 		panic(error.NewHttpError(500, "50002", err.Error()))
@@ -64,14 +65,14 @@ func getJpeg(c *gin.Context) interface{} {
 	}
 
 	// docker 处理图片
-	go docker.Run(strconv.FormatInt(TimeStamp, 10))
+	go oims.Add(ID)
 
-	return TimeStamp
+	return ID
 }
 
 func getXml(c *gin.Context) interface{} {
-	timeStamp := c.Query("id")
-	resultPath := "../results/" + timeStamp + ".xml"
+	ID := c.Query("id")
+	resultPath := conf.Path.Result+ "/" + ID + ".xml"
 	f, err := os.Open(resultPath)
 	if os.IsNotExist(err) {
 		panic(error.NewHttpError(404, "40401", resultPath+" is not exist"))
@@ -84,11 +85,6 @@ func getXml(c *gin.Context) interface{} {
 	return result
 }
 
-func restart(c *gin.Context) interface{} {
-	id := c.Query("id")
-	docker.Run(id)
-	return "End of run"
-}
 
 func ping(_ *gin.Context) interface{} {
 	return "success"

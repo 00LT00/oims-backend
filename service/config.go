@@ -12,8 +12,14 @@ type server struct {
 	Sign string
 }
 
+type path struct {
+	Result  string
+	History string
+}
+
 type conf struct {
 	DB     db
 	DBDev  db
 	Server server
+	Path   path
 }
