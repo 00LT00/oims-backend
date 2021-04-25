@@ -15,6 +15,7 @@ type server struct {
 type path struct {
 	Result  string
 	History string
+	Log     string
 }
 
 type conf struct {

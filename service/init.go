@@ -6,8 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"log"
 	_ "oims/service/gpu"
 	"os"
+	"path/filepath"
 )
 
 var Service *service
@@ -25,8 +27,8 @@ func init() {
 	//	panic(err)
 	//}
 	//Service.DB = db
-	Conf.Path.Result = dir+ Conf.Path.Result
-	Conf.Path.History = dir+ Conf.Path.History
+	Conf.Path.Result = dir + Conf.Path.Result
+	Conf.Path.History = dir + Conf.Path.History
 	initPath()
 	r := initGin()
 	Service.Engine = r
@@ -48,7 +50,7 @@ func initGin() *gin.Engine {
 	return gin.Default()
 }
 
-func initPath(){
+func initPath() {
 	err := os.MkdirAll(Conf.Path.History, os.ModePerm)
 	if err != nil {
 		panic(err)
@@ -58,4 +60,21 @@ func initPath(){
 	if err != nil {
 		panic(err)
 	}
+	err = os.MkdirAll(Conf.Path.Log, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func initLog() {
+	logFile, err := os.OpenFile(filepath.Join(Conf.Path.Log, "log.txt"), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		panic(err)
+	}
+	errlogFile, err := os.OpenFile(filepath.Join(Conf.Path.Log, "errlog.txt"), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		panic(err)
+	}
+	Service.Logger = log.New(logFile, "", log.LstdFlags)
+	Service.ErrLogger = log.New(errlogFile, "", log.LstdFlags)
 }

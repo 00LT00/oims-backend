@@ -30,7 +30,7 @@ func getJpeg(c *gin.Context) interface{} {
 	if err != nil {
 		panic(error.NewHttpError(500, "50001", err.Error()))
 	}
-	filePath := basePath + ID
+	filePath := basePath + "/" + ID
 	err = os.Mkdir(filePath, os.ModePerm)
 	if err != nil {
 		panic(error.NewHttpError(500, "50002", err.Error()))

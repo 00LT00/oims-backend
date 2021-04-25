@@ -14,3 +14,4 @@ Sign = "spppk"
 [Path]
 Result = "/result"
 History = "/history"
+Log = "/log"
