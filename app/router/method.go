@@ -65,17 +65,17 @@ func getJpeg(c *gin.Context) interface{} {
 	}
 
 	// docker 处理图片
-	go oims.Add(ID)
+	oims.Add(ID)
 
 	return ID
 }
 
 func getXml(c *gin.Context) interface{} {
 	ID := c.Query("id")
-	resultPath := conf.Path.Result+ "/" + ID + ".xml"
+	resultPath := conf.Path.Result + "/" + ID + ".xml"
 	f, err := os.Open(resultPath)
 	if os.IsNotExist(err) {
-		panic(error.NewHttpError(404, "40401", resultPath+" is not exist"))
+		panic(error.NewHttpError(200, "40401", resultPath+" is not exist"))
 	}
 	data, err := ioutil.ReadFile(f.Name())
 	if err != nil {
@@ -85,6 +85,11 @@ func getXml(c *gin.Context) interface{} {
 	return result
 }
 
+func reMeasuring(c *gin.Context) interface{} {
+	ID := c.Query("id")
+	oims.Add(ID)
+	return "reMeasuring"
+}
 
 func ping(_ *gin.Context) interface{} {
 	return "success"

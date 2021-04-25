@@ -13,6 +13,7 @@ func InitRouter() {
 	r.GET("/ping", f(ping))
 	r.Use(check, recovery)
 	r.POST("/image", f(getJpeg))
+	r.POST("/re", f(reMeasuring))
 
 	r.GET("/xml", f(getXml))
 
