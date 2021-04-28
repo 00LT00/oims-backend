@@ -11,7 +11,7 @@ import (
 var conf = service.Conf
 var jobs chan string
 var serv = service.Service
-var cancelMap map[string]bool
+var cancelMap map[string]int
 
 func run(id string) {
 	fmt.Println("init run", id)
@@ -32,7 +32,7 @@ func run(id string) {
 	go func(id string) {
 		buf := make([]byte, 1024)
 		temp := make([]byte, 1024)
-		buf = append(buf, []byte(fmt.Sprintf("-----------------------  %s  -----------------------\n", id))...)
+		buf = append(buf, []byte(fmt.Sprintf("\n-----------------------  %s  -----------------------\n", id))...)
 		for {
 			_, err := stdout.Read(temp)
 			buf = append(buf, temp...)
@@ -40,14 +40,14 @@ func run(id string) {
 				break
 			}
 		}
-		buf = append(buf, []byte(fmt.Sprintf("-----------------------  %s  -----------------------\n", id))...)
+		buf = append(buf, []byte(fmt.Sprintf("\n-----------------------  %s  -----------------------\n", id))...)
 		serv.Logger.Println(string(buf))
 	}(id)
 
 	go func(id string) {
 		buf := make([]byte, 1024)
 		temp := make([]byte, 1024)
-		buf = append(buf, []byte(fmt.Sprintf("-----------------------  %s  -----------------------\n", id))...)
+		buf = append(buf, []byte(fmt.Sprintf("\n-----------------------  %s  -----------------------\n", id))...)
 		for {
 			_, err := stderr.Read(temp)
 			buf = append(buf, temp...)
@@ -55,18 +55,19 @@ func run(id string) {
 				break
 			}
 		}
-		buf = append(buf, []byte(fmt.Sprintf("-----------------------  %s  -----------------------\n", id))...)
+		buf = append(buf, []byte(fmt.Sprintf("\n-----------------------  %s  -----------------------\n", id))...)
 		serv.ErrLogger.Println(string(buf))
 	}(id)
 	err = cmd.Wait()
 	if err != nil {
 		serv.ErrLogger.Println(" Remeasuring ", id)
+		cancelMap[id]++
 		Add(id)
 	}
 }
 
 func Add(id string) {
-	if cancelMap[id] {
+	if cancelMap[id] >= 5 {
 		serv.Logger.Println(id, "was cancel")
 		fmt.Println(id, "was cancel")
 		delete(cancelMap, id)
@@ -77,12 +78,12 @@ func Add(id string) {
 }
 
 func Cancel(id string) {
-	cancelMap[id] = true
+	cancelMap[id] = 5
 }
 
 func init() {
 	jobs = make(chan string)
-	cancelMap = make(map[string]bool)
+	cancelMap = make(map[string]int)
 	go func() {
 		for {
 			select {
