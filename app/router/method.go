@@ -94,3 +94,9 @@ func reMeasuring(c *gin.Context) interface{} {
 func ping(_ *gin.Context) interface{} {
 	return "success"
 }
+
+func cancel(c *gin.Context) interface{} {
+	id := c.Query("id")
+	oims.Cancel(id)
+	return "cancel " + id
+}

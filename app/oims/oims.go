@@ -11,6 +11,7 @@ import (
 var conf = service.Conf
 var jobs chan string
 var serv = service.Service
+var cancelMap map[string]bool
 
 func run(id string) {
 	fmt.Println("init run", id)
@@ -60,17 +61,26 @@ func run(id string) {
 	err = cmd.Wait()
 	if err != nil {
 		serv.ErrLogger.Println(" Remeasuring ", id)
-		jobs <- id
+		Add(id)
 	}
 }
 
 func Add(id string) {
 	fmt.Println("add", id)
+	if cancelMap[id] {
+		delete(cancelMap, id)
+		return
+	}
 	jobs <- id
+}
+
+func Cancel(id string) {
+	cancelMap[id] = true
 }
 
 func init() {
 	jobs = make(chan string)
+	cancelMap = make(map[string]bool)
 	go func() {
 		for {
 			select {

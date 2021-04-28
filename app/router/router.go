@@ -14,6 +14,7 @@ func InitRouter() {
 	r.Use(check, recovery)
 	r.POST("/image", f(getJpeg))
 	r.POST("/re", f(reMeasuring))
+	r.DELETE("/cancel", f(cancel))
 
 	r.GET("/xml", f(getXml))
 
