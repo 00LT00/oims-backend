@@ -29,7 +29,9 @@ func init() {
 	//Service.DB = db
 	Conf.Path.Result = dir + Conf.Path.Result
 	Conf.Path.History = dir + Conf.Path.History
+	Conf.Path.Log = dir + Conf.Path.Log
 	initPath()
+	initLog()
 	r := initGin()
 	Service.Engine = r
 
@@ -77,4 +79,6 @@ func initLog() {
 	}
 	Service.Logger = log.New(logFile, "", log.LstdFlags)
 	Service.ErrLogger = log.New(errlogFile, "", log.LstdFlags)
+	Service.Logger.Println("init")
+	Service.ErrLogger.Println("init")
 }

@@ -1,6 +1,7 @@
 package gpu
 
 import (
+	"fmt"
 	"github.com/NVIDIA/go-nvml/pkg/nvml"
 	"log"
 	"time"
@@ -13,10 +14,12 @@ func init() {
 	if ret != nvml.SUCCESS {
 		log.Fatalf("Unable to initialize NVML: %v", nvml.ErrorString(ret))
 	}
+	GPUs = make(chan int)
 	go updateEmptyGPU()
 }
 
 func updateEmptyGPU() {
+	fmt.Println("update empty gpu")
 	defer func() {
 		ret := nvml.Shutdown()
 		if ret != nvml.SUCCESS {
@@ -24,6 +27,7 @@ func updateEmptyGPU() {
 		}
 	}()
 	count, ret := nvml.DeviceGetCount()
+	fmt.Println("gpu number: ", count)
 	if ret != nvml.SUCCESS {
 		log.Fatalf("Unable to get device count: %v", nvml.ErrorString(ret))
 	}
@@ -37,14 +41,17 @@ func updateEmptyGPU() {
 			if ret != nvml.SUCCESS {
 				log.Fatalf("Unable to get Utilization of device at index %d: %v", i, nvml.ErrorString(ret))
 			}
-			if utilization.Gpu <= 20 {
+			fmt.Println("gpu: ", i, utilization)
+			if utilization.Gpu <= 20 && utilization.Memory <= 30 {
 				select {
-				case GPUs<-i:
+				case GPUs <- i:
+					fmt.Println("gpu", i, "was be acquired")
 				default:
+					fmt.Println("not use", i)
 				}
 			}
 		}
-		time.Sleep(time.Second * 3) //每3s更新一次空闲状态
+		fmt.Println("try get empty")
+		time.Sleep(time.Second * 20) //每3s更新一次空闲状态
 	}
 }
-
