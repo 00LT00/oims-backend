@@ -66,11 +66,13 @@ func run(id string) {
 }
 
 func Add(id string) {
-	fmt.Println("add", id)
 	if cancelMap[id] {
+		serv.Logger.Println(id, "was cancel")
+		fmt.Println(id, "was cancel")
 		delete(cancelMap, id)
 		return
 	}
+	fmt.Println("add", id)
 	jobs <- id
 }
 
