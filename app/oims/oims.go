@@ -61,7 +61,6 @@ func run(id string) {
 	err = cmd.Wait()
 	if err != nil {
 		serv.ErrLogger.Println(" Remeasuring ", id)
-		cancelMap[id]++
 		Add(id)
 	}
 }
