@@ -18,7 +18,7 @@ func run(id string) {
 	gpuID := strconv.Itoa(<-gpu.GPUs)
 	fmt.Println(id, " get gpu:", gpuID)
 	cmd := exec.Command("/usr/bin/python3", "/oims/model_inspect.py",
-		"--output_image_dir", conf.Path.Result,
+		"--output_image_dir", conf.Path.Result+"/",
 		"--input_image", conf.Path.History+"/"+id+"/*.jpg",
 		"--gpu", gpuID,
 	)
